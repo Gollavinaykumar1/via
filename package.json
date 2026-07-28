@@ -1,0 +1,13 @@
+{
+  "name": "via-autonomous-ai-platform",
+  "version": "6.0.0",
+  "description": "VIA — Autonomous AI Digital Enterprise Platform with 10 AI agents",
+  "private": true,
+  "scripts": {
+    "start": "echo 'Use: uvicorn backend.main:app --reload'",
+    "test": "pytest tests/ -v"
+  },
+  "keywords": ["ai", "autonomous", "agents", "fastapi", "enterprise"],
+  "author": "VIA Team",
+  "license": "MIT"
+}

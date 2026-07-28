@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIA — Autonomous AI Digital Team</title>
+<meta name="description" content="VIA: AI-powered autonomous digital team platform. Chat, build, and deploy apps with 9 AI agents.">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/via-chat.css?v=10">
+<style>
+  #authPage {
+    background: url('/login_bg.png') center center / cover no-repeat !important;
+    background-color: #0a0a1a !important;
+  }
+  .auth-logo {
+    width: 110px !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+</style>
+</head>
+<body>
+
+<div id="authPage">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <img id="viaLogo" alt="VIA Logo" class="auth-logo">
+      <div class="via-display">VIA</div>
+    </div>
+    <div class="holo-card">
+      <div class="a-tabs" id="authTabs">
+        <button class="a-tab on" id="tabLogin" onclick="switchAuth('login')">Login</button>
+        <button class="a-tab" id="tabRegister" onclick="switchAuth('register')">Register</button>
+      </div>
+      <div id="authMsg" class="a-msg"></div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="loginUser" type="email" placeholder="Enter your email" autocomplete="email"></div>
+        <div class="fld"><label class="fld-label">Password</label><input class="fld-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"></div>
+        <button class="cyber-btn" id="loginBtn" onclick="doLogin()"><span class="lb">Access System</span></button>
+        <div style="text-align:center;margin-top:12px">
+          <button onclick="switchAuth('forgot')" style="background:none;border:none;color:var(--c);font-size:12px;cursor:pointer;text-decoration:underline">Forgot Password?</button>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="regForm" style="display:none">
+        <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="regUser" type="email" placeholder="Enter your email" autocomplete="email"></div>
+        <div class="fld"><label class="fld-label">Password</label><input class="fld-input" id="regPass" type="password" placeholder="Choose password (min 6 chars)" autocomplete="new-password"></div>
+        <button class="cyber-btn" id="regBtn" onclick="doRegister()"><span class="lb">Create Account</span></button>
+      </div>
+
+      <!-- EMAIL VERIFICATION FORM -->
+      <div id="verifyForm" style="display:none">
+        <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">
+          📬 A 6-digit verification code has been sent to your email.<br>
+          <span style="color:var(--y);font-size:11px">Check your inbox (or spam folder) for the code.</span>
+        </div>
+        <div class="fld"><label class="fld-label">Verification Code</label><input class="fld-input" id="verifyCode" type="text" placeholder="Enter 6-digit code" maxlength="6" autocomplete="one-time-code"></div>
+        <button class="cyber-btn" id="verifyBtn" onclick="doVerify()"><span class="lb">✅ Verify Email</span></button>
+        <div style="text-align:center;margin-top:10px">
+          <button onclick="switchAuth('login')" style="background:none;border:none;color:var(--tx3);font-size:11px;cursor:pointer">← Back to Login</button>
+        </div>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div id="forgotForm" style="display:none">
+        <div id="forgotStep1">
+          <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">Enter your email to receive a reset code.</div>
+          <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="forgotEmail" type="email" placeholder="Enter your email"></div>
+          <button class="cyber-btn" id="forgotBtn" onclick="doForgotRequest()"><span class="lb">Send Reset Code</span></button>
+        </div>
+        <div id="forgotStep2" style="display:none">
+          <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">
+            📬 A password reset code has been sent to your email.<br>
+            <span style="color:var(--y);font-size:11px">Check your inbox (or spam folder) for the code.</span>
+          </div>
+          <div class="fld"><label class="fld-label">Reset Code</label><input class="fld-input" id="resetCode" type="text" placeholder="6-digit reset code" maxlength="6"></div>
+          <div class="fld"><label class="fld-label">New Password</label><input class="fld-input" id="resetPass" type="password" placeholder="New password (min 6 chars)"></div>
+          <button class="cyber-btn" id="resetBtn" onclick="doReset()"><span class="lb">🔒 Reset Password</span></button>
+        </div>
+        <div style="text-align:center;margin-top:10px">
+          <button onclick="switchAuth('login')" style="background:none;border:none;color:var(--tx3);font-size:11px;cursor:pointer">← Back to Login</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP SHELL ═══ -->
+<button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div id="app">
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <img src="/company_logo.png" alt="VIA" style="width:32px;height:32px;border-radius:8px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,212,255,.3))">
+      <div><div class="sb-name">VIA</div><div class="sb-ver">v6.0 • Phase 6</div></div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Main</div>
+      <button class="sb-item on" data-view="chat" onclick="showView('chat')"><span class="sb-icon">💬</span>Chat</button>
+      <button class="sb-item" data-view="dashboard" onclick="showView('dashboard')"><span class="sb-icon">📊</span>Dashboard</button>
+      <button class="sb-item" data-view="build" onclick="showView('build')"><span class="sb-icon">🏗️</span>Build</button>
+      <div class="sb-sec">Data</div>
+      <button class="sb-item" data-view="projects" onclick="showView('projects')"><span class="sb-icon">📁</span>Projects</button>
+      <button class="sb-item" data-view="memory" onclick="showView('memory')"><span class="sb-icon">🧠</span>Memory</button>
+      <button class="sb-item" data-view="history" onclick="showView('history')"><span class="sb-icon">📋</span>History</button>
+      <button class="sb-item" data-view="meetings" onclick="showView('meetings')"><span class="sb-icon">🎙️</span>Meetings</button>
+      <div class="sb-sec">Company</div>
+      <button class="sb-item" data-view="templates" onclick="showView('templates')"><span class="sb-icon">📝</span>Templates</button>
+      <button class="sb-item" data-view="org" onclick="showView('org')"><span class="sb-icon">🏢</span>Org Chart</button>
+    </nav>
+    <div class="sb-builds" id="recentBuilds"><div class="sb-builds-title">Recent Builds</div><div id="recentBuildsList"></div></div>
+    <div class="sb-footer">
+      <div class="u-av" id="userAv">U</div>
+      <div class="u-info"><div class="u-nm" id="userName">User</div><div class="u-rl">Operator</div></div>
+      <button class="lo-btn" onclick="doLogout()" title="Logout">⏻</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- CHAT VIEW -->
+    <div class="view on" id="v-chat">
+      <div class="chat-header">
+        <div class="chat-title">VIA Chat — AI Assistant</div>
+        <button class="btn-new" onclick="newChat()">+ New Chat</button>
+      </div>
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="msg msg-via">
+          <div class="msg-av">🤖</div>
+          <div>
+            <div class="msg-body">
+              <strong>Welcome to VIA!</strong> I'm your autonomous AI digital team.<br><br>
+              I can do three things:<br>
+              💬 <strong>Chat</strong> — Ask me anything about tech, code, or concepts<br>
+              🏗️ <strong>Build</strong> — Say "Build me a [your idea]" and I'll create & deploy a live app<br>
+              🔍 <strong>Analyze</strong> — Ask me to analyze, plan, or strategize anything<br><br>
+              What would you like to do? ⚡
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-wrap">
+        <div class="chat-input-box">
+          <textarea id="chatInput" rows="1" placeholder="Ask anything or say 'Build me a...'"></textarea>
+          <button id="sendBtn" onclick="sendChat()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="view" id="v-dashboard">
+      <div class="dash-view">
+        <div class="pg-title">Command Center</div>
+        <div class="pg-sub">VIA Phase 6 — System Overview</div>
+        <div class="kpi-row">
+          <div class="kpi kpi-c"><div class="kpi-label">Total Runs</div><div class="kpi-val" id="kTotalRuns">—</div><div class="kpi-hint">All time</div></div>
+          <div class="kpi kpi-v"><div class="kpi-label">Agents</div><div class="kpi-val">10</div><div class="kpi-hint">Active departments</div></div>
+          <div class="kpi kpi-g"><div class="kpi-label">Success Rate</div><div class="kpi-val" id="kSuccRate">—</div><div class="kpi-hint">Overall</div></div>
+          <div class="kpi kpi-m"><div class="kpi-label">Avg Duration</div><div class="kpi-val" id="kAvgDur">—</div><div class="kpi-hint">Seconds</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">System Health</span><button class="btn-new" onclick="loadDashboard()">Refresh</button></div>
+          <div class="panel-body" id="healthBody"><div class="empty">Loading system metrics...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD VIEW -->
+    <div class="view" id="v-build">
+      <div class="dash-view">
+        <div class="pg-title">Build & Deploy</div>
+        <div class="pg-sub">Describe your app — VIA builds & deploys it live</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">New Build</span></div>
+          <div class="panel-body">
+            <div class="fld"><label class="fld-label">Describe your app</label>
+              <textarea class="fld-input" id="buildTask" style="min-height:100px;resize:vertical;" placeholder="e.g. Build me a todo app with user login..."></textarea>
+            </div>
+            <button class="cyber-btn" id="buildBtn" onclick="doBuild()" style="max-width:260px"><span class="lb">🚀 Build & Deploy</span></button>
+            <div id="buildResult" style="margin-top:16px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORY VIEW -->
+    <div class="view" id="v-memory">
+      <div class="dash-view">
+        <div class="pg-title">Agent Memory</div>
+        <div class="pg-sub">What agents remember from past runs</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Recent Memories</span><button class="btn-new" onclick="loadMemory()">Refresh</button></div>
+          <div class="panel-body" id="memBody"><div class="empty">Loading memories...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY VIEW -->
+    <div class="view" id="v-history">
+      <div class="dash-view">
+        <div class="pg-title">Company History</div>
+        <div class="pg-sub">Past build runs and agent executions</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Recent Runs</span><button class="btn-new" onclick="loadHistory()">Refresh</button></div>
+          <div class="panel-body" id="histBody"><div class="empty">Loading history...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS VIEW -->
+    <div class="view" id="v-projects">
+      <div class="dash-view">
+        <div class="pg-title">Projects</div>
+        <div class="pg-sub">Browse generated project files</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Project Files</span><button class="btn-new" onclick="loadProjects()">Refresh</button></div>
+          <div class="panel-body" id="projBody"><div class="empty">Loading projects...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPLATES VIEW -->
+    <div class="view" id="v-templates">
+      <div class="dash-view">
+        <div class="pg-title">Task Templates</div>
+        <div class="pg-sub">Quick-start templates for common app types</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Available Templates</span></div>
+          <div class="panel-body" id="tplBody"><div class="tpl-grid" id="tplGrid"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEETINGS VIEW -->
+    <div class="view" id="v-meetings">
+      <div class="dash-view">
+        <div class="pg-title">Meeting Room</div>
+        <div class="pg-sub">AI agent boardroom — generate live discussions</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">New Meeting</span></div>
+          <div class="panel-body">
+            <div class="meeting-controls">
+              <input class="fld-input" id="meetingTask" placeholder="Describe the topic to discuss..." style="flex:1;min-width:200px">
+              <button class="cyber-btn" id="meetingBtn" onclick="generateMeeting()" style="max-width:180px"><span class="lb">🎙️ Start Meeting</span></button>
+            </div>
+            <div id="meetingTranscript"></div>
+            <div id="meetingChatBox" style="display:none; margin-top:10px; border-top: 1px solid var(--border); padding-top:10px; display:flex; gap:10px;">
+              <input class="fld-input" id="meetingChatInput" placeholder="@backend how about the schema?" style="flex:1;" onkeydown="if(event.key === 'Enter') sendMeetingChat()">
+              <button class="cyber-btn" onclick="sendMeetingChat()" style="max-width:120px;"><span class="lb">Send</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Past Meetings</span><button class="btn-new" onclick="loadMeetings()">Refresh</button></div>
+          <div class="panel-body" id="meetingsBody"><div class="empty">Loading meetings...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORG VIEW -->
+    <div class="view" id="v-org">
+      <div class="dash-view">
+        <div class="pg-title">Organization Chart</div>
+        <div class="pg-sub">VIA's 9-department AI team structure</div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Departments</span></div>
+          <div class="panel-body" id="orgBody">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div class="mem-card"><div class="mem-agent">🏛️ CEO</div><div class="mem-task">Strategy & delegation</div></div>
+              <div class="mem-card"><div class="mem-agent">⚙️ Backend</div><div class="mem-task">APIs, databases, services</div></div>
+              <div class="mem-card"><div class="mem-agent">🎨 Frontend</div><div class="mem-task">React UI, design, UX</div></div>
+              <div class="mem-card"><div class="mem-agent">🔒 Security</div><div class="mem-task">Auth, encryption, threats</div></div>
+              <div class="mem-card"><div class="mem-agent">🚀 DevOps</div><div class="mem-task">CI/CD, infra, deployment</div></div>
+              <div class="mem-card"><div class="mem-agent">🧠 AI Research</div><div class="mem-task">LLM strategy, ML models</div></div>
+              <div class="mem-card"><div class="mem-agent">📐 Architecture</div><div class="mem-task">System design, data flow</div></div>
+              <div class="mem-card"><div class="mem-agent">👥 HR</div><div class="mem-task">Team structure, hiring</div></div>
+              <div class="mem-card"><div class="mem-agent">💰 Finance</div><div class="mem-task">Budget, ROI, pricing</div></div>
+              <div class="mem-card"><div class="mem-agent">📣 Marketing</div><div class="mem-task">GTM, branding, growth</div></div>
+              <div class="mem-card"><div class="mem-agent">📊 Presentation</div><div class="mem-task">Reports, summaries, slides</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+// ═══ ASSET LOADER (bypass browser cache) ═══
+(function() {
+  const t = Date.now();
+  const logo = document.getElementById('viaLogo');
+  if (logo) logo.src = '/company_logo.png?t=' + t;
+  const authPage = document.getElementById('authPage');
+  if (authPage) authPage.style.backgroundImage = "url('/login_bg.png?t=" + t + "')";
+})();
+
+// ═══ STATE ═══
+let TOKEN = localStorage.getItem('via_token') || '';
+let USERNAME = localStorage.getItem('via_user') || '';
+let chatBusy = false;
+const API = '';
+
+// ═══ AUTH ═══
+let _pendingVerifyEmail = '';
+let _forgotEmail = '';
+
+function switchAuth(mode) {
+  document.querySelectorAll('.a-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('regForm').style.display = 'none';
+  document.getElementById('verifyForm').style.display = 'none';
+  document.getElementById('forgotForm').style.display = 'none';
+  const tabs = document.getElementById('authTabs');
+
+  if (mode === 'login') {
+    document.getElementById('loginForm').style.display = '';
+    document.getElementById('tabLogin').classList.add('on');
+    tabs.style.display = '';
+  } else if (mode === 'register') {
+    document.getElementById('regForm').style.display = '';
+    document.getElementById('tabRegister').classList.add('on');
+    tabs.style.display = '';
+  } else if (mode === 'verify') {
+    document.getElementById('verifyForm').style.display = '';
+    tabs.style.display = 'none';
+  } else if (mode === 'forgot') {
+    document.getElementById('forgotForm').style.display = '';
+    tabs.style.display = 'none';
+  }
+  hideMsg();
+}
+
+function showMsg(txt, ok) {
+  const el = document.getElementById('authMsg');
+  el.className = 'a-msg ' + (ok ? 'ok' : 'err');
+  el.textContent = txt;
+  el.style.display = 'block';
+}
+function hideMsg() { document.getElementById('authMsg').style.display = 'none'; }
+
+async function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (!u || !p) return showMsg('Please fill in all fields', false);
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  try {
+    const fd = new URLSearchParams(); fd.append('username', u); fd.append('password', p);
+    const r = await fetch(API + '/auth/login', { method: 'POST', body: fd });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Login failed');
+    TOKEN = d.access_token;
+    USERNAME = u;
+    localStorage.setItem('via_token', TOKEN);
+    localStorage.setItem('via_user', USERNAME);
+    enterApp();
+  } catch (e) { showMsg(e.message, false); }
+  btn.disabled = false;
+}
+
+async function doRegister() {
+  const u = document.getElementById('regUser').value.trim();
+  const p = document.getElementById('regPass').value;
+  if (!u || !p) return showMsg('Please fill in all fields', false);
+  if (p.length < 6) return showMsg('Password must be at least 6 characters', false);
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/auth/register', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: u, password: p })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Registration failed');
+    _pendingVerifyEmail = u;
+    showMsg('Account created! A verification code has been sent to your email.', true);
+    switchAuth('verify');
+  } catch (e) { showMsg(e.message, false); }
+  btn.disabled = false;
+}
+
+async function doVerify() {
+  const code = document.getElementById('verifyCode').value.trim();
+  if (!code || code.length !== 6) return showMsg('Enter the 6-digit verification code', false);
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/auth/verify-email', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: _pendingVerifyEmail, code })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Verification failed');
+    showMsg('✅ Email verified! You can now login.', true);
+    setTimeout(() => { switchAuth('login'); document.getElementById('loginUser').value = _pendingVerifyEmail; }, 1500);
+  } catch (e) { showMsg(e.message, false); }
+  btn.disabled = false;
+}
+
+async function doForgotRequest() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email) return showMsg('Enter your email address', false);
+  const btn = document.getElementById('forgotBtn');
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/auth/forgot-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Request failed');
+    _forgotEmail = email;
+    showMsg('Reset code sent! Check your email (or spam folder).', true);
+    document.getElementById('forgotStep1').style.display = 'none';
+    document.getElementById('forgotStep2').style.display = '';
+  } catch (e) { showMsg(e.message, false); }
+  btn.disabled = false;
+}
+
+async function doReset() {
+  const code = document.getElementById('resetCode').value.trim();
+  const newPass = document.getElementById('resetPass').value;
+  if (!code || !newPass) return showMsg('Fill in all fields', false);
+  if (newPass.length < 6) return showMsg('Password must be at least 6 characters', false);
+  const btn = document.getElementById('resetBtn');
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/auth/reset-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: _forgotEmail, code, new_password: newPass })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Reset failed');
+    showMsg('✅ Password reset! You can now login.', true);
+    setTimeout(() => { switchAuth('login'); document.getElementById('loginUser').value = _forgotEmail; document.getElementById('forgotStep1').style.display = ''; document.getElementById('forgotStep2').style.display = 'none'; }, 1800);
+  } catch (e) { showMsg(e.message, false); }
+  btn.disabled = false;
+}
+
+function doLogout() {
+  TOKEN = ''; USERNAME = '';
+  localStorage.removeItem('via_token');
+  localStorage.removeItem('via_user');
+  document.body.classList.remove('light'); // Restore auth dark theme
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('authPage').style.display = 'flex';
+}
+
+function enterApp() {
+  document.getElementById('authPage').style.display = 'none';
+  document.body.classList.add('light'); // Force professional white theme
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userAv').textContent = USERNAME.charAt(0).toUpperCase();
+  document.getElementById('userName').textContent = USERNAME;
+  loadChatHistory();
+}
+
+function authHeaders() { return { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' }; }
+
+// ═══ THEME ═══
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('via_theme', isLight ? 'light' : 'dark');
+}
+if (localStorage.getItem('via_theme') === 'light') {
+  document.body.classList.add('light');
+  document.addEventListener('DOMContentLoaded', () => {
+    const t = document.getElementById('themeToggle'); if (t) t.textContent = '☀️';
+  });
+}
+
+// ═══ MOBILE SIDEBAR ═══
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+
+// ═══ NAVIGATION ═══
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('on'));
+  const view = document.getElementById('v-' + v);
+  if (view) view.classList.add('on');
+  const btn = document.querySelector(`[data-view="${v}"]`);
+  if (btn) btn.classList.add('on');
+  if (v === 'dashboard') loadDashboard();
+  if (v === 'memory') loadMemory();
+  if (v === 'history') loadHistory();
+  if (v === 'projects') loadProjects();
+  if (v === 'templates') loadTemplates();
+  if (v === 'meetings') loadMeetings();
+  // Close mobile sidebar
+  if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
+}
+
+// ═══ CHAT ═══
+function formatMd(text) {
+  if (!text) return '';
+  let h = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trim()}</code></pre>`)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/### (.+)/g, '<h3>$1</h3>')
+    .replace(/\n- /g, '\n• ')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>')
+    .replace(/\n/g, '<br>');
+  return h;
+}
+
+function addMsg(role, text, intent, agentName, agentEmoji, agentColor) {
+  const box = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-via');
+  
+  let av = role === 'user' ? USERNAME.charAt(0).toUpperCase() : '🤖';
+  let nameStr = '';
+  
+  if (role !== 'user' && agentName) {
+    av = agentEmoji || '💬';
+    let c = agentColor ? `var(--${agentColor})` : 'var(--y)';
+    nameStr = `<div class="msg-agent-name" style="color:${c};font-size:11px;font-weight:700;margin-bottom:2px">${agentName}</div>`;
+  }
+  
+  let body = formatMd(text);
+  // If build mode with URLs, wrap in deploy card
+  if (intent === 'build' && body.includes('https://')) {
+    body = body.replace(/(🌍[\s\S]*?)(<br><br>|$)/, '<div class="deploy-card">$1</div>');
+  }
+  div.innerHTML = `<div class="msg-av" ${agentColor ? `style="border-color:var(--${agentColor})"` : ''}>${av}</div><div>${nameStr}<div class="msg-body">${body}</div><div class="msg-time">${new Date().toLocaleTimeString()}</div></div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  const box = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'msg msg-via';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="msg-av">🤖</div><div><div class="msg-body"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+function hideTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg || chatBusy) return;
+  input.value = '';
+  input.style.height = 'auto';
+  chatBusy = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addMsg('user', msg);
+  showTyping();
+
+  try {
+    const r = await fetch(API + '/chat/', {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ message: msg })
+    });
+    hideTyping();
+    if (r.status === 401) { doLogout(); return; }
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Request failed');
+    addMsg('assistant', d.response, d.intent, d.agent_name, d.agent_emoji, d.agent_color);
+  } catch (e) {
+    hideTyping();
+    addMsg('assistant', '❌ Error: ' + e.message);
+  }
+  chatBusy = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+async function loadChatHistory() {
+  try {
+    const r = await fetch(API + '/chat/history/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.history && d.history.length > 0) {
+      // Clear welcome message if there's history
+      const box = document.getElementById('chatMsgs');
+      // Keep the welcome message, add history after
+      d.history.forEach(m => addMsg(m.role, m.message, m.intent));
+    }
+  } catch (e) { console.log('No chat history'); }
+}
+
+function newChat() {
+  const box = document.getElementById('chatMsgs');
+  box.innerHTML = '';
+  addMsg('assistant', '🔄 **New conversation started!**\n\nHow can I help you? Ask me anything, request a build, or ask for analysis. ⚡');
+  fetch(API + '/chat/history/', { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+}
+
+// Auto-resize textarea
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('chatInput');
+  if (ta) {
+    ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 120) + 'px'; });
+    ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } });
+  }
+});
+
+// ═══ BUILD ═══
+async function doBuild() {
+  const task = document.getElementById('buildTask').value.trim();
+  if (!task) return;
+  const btn = document.getElementById('buildBtn');
+  const res = document.getElementById('buildResult');
+  btn.disabled = true;
+  res.innerHTML = '<div style="color:var(--y);font-family:var(--fm);font-size:12px">🚀 Building... this may take 1-2 minutes...</div>';
+  try {
+    const r = await fetch(API + '/deploy/', {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ task, push_to_github: true, deploy_to_render: true })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Build failed');
+    let html = '<div class="deploy-card">';
+    html += `<strong style="color:var(--g)">✅ Build Complete! (Project #${d.project_id || '?'})</strong><br><br>`;
+    
+    const frontendUrl = d.live_urls?.frontend;
+    const backendUrl  = d.live_urls?.backend;
+    const apiDocsUrl  = d.live_urls?.api_docs;
+    const repoUrl     = d.github?.repo_url;
+    const repoName    = d.github?.repo_name;
+    
+    if (frontendUrl) {
+      html += `🖥️ <strong>Frontend (GitHub Pages):</strong> <a href="${frontendUrl}" target="_blank">${frontendUrl}</a><br>`;
+      html += `<span style="font-size:11px;color:var(--y)">⏳ GitHub Pages takes 1-3 minutes to go live. If you see a 404, wait and refresh.</span><br><br>`;
+    }
+    if (backendUrl) {
+      html += `⚡ <strong>Backend (Render):</strong> <a href="${backendUrl}" target="_blank">${backendUrl}</a><br>`;
+    }
+    if (apiDocsUrl) {
+      html += `📚 <strong>API Docs:</strong> <a href="${apiDocsUrl}" target="_blank">${apiDocsUrl}</a><br>`;
+    }
+    if (repoUrl) {
+      html += `<br>📦 <strong>GitHub Repo:</strong> <a href="${repoUrl}" target="_blank">${repoUrl}</a><br>`;
+    }
+    if (!frontendUrl && !backendUrl && !repoUrl) {
+      html += `<span style="color:var(--y)">⚠️ Links not yet available — GitHub repo may still be initializing. Check your <a href="https://github.com/${d.github?.repo_name || ''}" target="_blank">GitHub</a> in ~1 minute.</span><br>`;
+    }
+    html += `<br><span style="color:var(--tx3);font-size:11px">Duration: ${d.execution_summary?.total_duration_seconds || '?'}s | App Type: ${d.app_type || '?'}</span>`;
+    html += '</div>';
+    res.innerHTML = html;
+  } catch (e) { res.innerHTML = `<div style="color:var(--m2)">❌ ${e.message}</div>`; }
+  btn.disabled = false;
+}
+
+// ═══ DASHBOARD ═══
+async function loadDashboard() {
+  try {
+    const r = await fetch(API + '/system-health/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const m = d.metrics || {};
+    document.getElementById('kTotalRuns').textContent = m.total_runs || 0;
+    document.getElementById('kSuccRate').textContent = (100 - (m.failure_rate_percent || 0)).toFixed(0) + '%';
+    document.getElementById('kAvgDur').textContent = (m.avg_duration_seconds || 0).toFixed(1) + 's';
+    document.getElementById('healthBody').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--fm);font-size:12px;color:var(--tx2)">
+        <div>Total Agents Executed: <strong style="color:var(--c)">${m.total_agents_executed || 0}</strong></div>
+        <div>Successful: <strong style="color:var(--g)">${m.total_successful || 0}</strong></div>
+        <div>Failed: <strong style="color:var(--m2)">${m.total_failed || 0}</strong></div>
+        <div>Max Duration: <strong style="color:var(--y)">${(m.max_duration_seconds||0).toFixed(1)}s</strong></div>
+      </div>`;
+  } catch (e) { document.getElementById('healthBody').innerHTML = '<div class="empty">Failed to load metrics</div>'; }
+}
+
+// ═══ MEMORY ═══
+async function loadMemory() {
+  try {
+    const r = await fetch(API + '/agent-memory/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('memBody');
+    if (!d.memories || d.memories.length === 0) { el.innerHTML = '<div class="empty">No memories yet</div>'; return; }
+    el.innerHTML = d.memories.map(m => `
+      <div class="mem-card">
+        <div class="mem-agent">${m.agent}</div>
+        <div class="mem-task">${(m.task||'').substring(0,80)}</div>
+        <div style="font-size:12px;color:var(--tx3);margin-top:3px">${(m.output_summary||'').substring(0,120)}</div>
+        <div class="mem-conf">Confidence: ${(m.confidence||0).toFixed(2)} • ${m.timestamp||''}</div>
+      </div>`).join('');
+  } catch (e) { document.getElementById('memBody').innerHTML = '<div class="empty">Failed to load</div>'; }
+}
+
+// ═══ HISTORY ═══
+async function loadHistory() {
+  try {
+    const r = await fetch(API + '/company-history/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('histBody');
+    const h = d.recent_history || [];
+    if (h.length === 0) { el.innerHTML = '<div class="empty">No history yet</div>'; return; }
+    el.innerHTML = h.map(item => `
+      <div class="mem-card">
+        <div class="mem-agent">📋 ${(item.task||'').substring(0,60)}</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:3px">${item.timestamp||''}</div>
+      </div>`).join('');
+  } catch (e) { document.getElementById('histBody').innerHTML = '<div class="empty">Failed to load</div>'; }
+}
+
+// ═══ PROJECTS ═══
+async function loadProjects() {
+  try {
+    const r = await fetch(API + '/files/projects/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('projBody');
+    const p = d.projects || [];
+    if (p.length === 0) { el.innerHTML = '<div class="empty">No projects yet — build something first!</div>'; return; }
+    el.innerHTML = p.map(proj => `
+      <div class="mem-card" style="cursor:pointer" onclick="viewProject('${proj.name || proj}')">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="mem-agent">📁 ${proj.name || proj}</div>
+          <a href="${API}/files/projects/${encodeURIComponent(proj.name || proj)}/download/" class="btn-new" onclick="event.stopPropagation()" style="font-size:8px;padding:4px 10px">⬇ ZIP</a>
+        </div>
+        <div class="mem-task">${proj.file_count ? proj.file_count + ' files' : ''} ${proj.created || ''}</div>
+      </div>`).join('');
+  } catch (e) { document.getElementById('projBody').innerHTML = '<div class="empty">Failed to load projects</div>'; }
+}
+
+// ═══ TEMPLATES ═══
+const TEMPLATES = [
+  {icon:'✅',name:'Todo App',desc:'Task manager with CRUD operations',task:'Build me a todo app with categories and status tracking'},
+  {icon:'🧠',name:'IQ Test',desc:'Intelligence quiz with scoring',task:'Build me an IQ test app with 10 questions and score results'},
+  {icon:'💰',name:'Expense Tracker',desc:'Track spending by category',task:'Build me an expense tracker with categories and charts'},
+  {icon:'🎮',name:'Game Buddy',desc:'Gaming session tracker',task:'Build me a game buddy tracker with scores and leaderboard'},
+  {icon:'🏥',name:'Hospital App',desc:'Appointment booking system',task:'Build me a hospital appointment booking system with departments'},
+  {icon:'📝',name:'Blog Platform',desc:'CMS with posts and tags',task:'Build me a blog platform with articles and categories'},
+  {icon:'📦',name:'Inventory',desc:'Stock management system',task:'Build me an inventory management system with product tracking'},
+  {icon:'📅',name:'Event Booking',desc:'Reservation system',task:'Build me an event booking and reservation system'},
+];
+function loadTemplates() {
+  const grid = document.getElementById('tplGrid');
+  grid.innerHTML = TEMPLATES.map(t => `
+    <div class="tpl-card" onclick="useTemplate('${t.task.replace(/'/g,"\\'")}')">
+      <div class="tpl-icon">${t.icon}</div>
+      <div class="tpl-name">${t.name}</div>
+      <div class="tpl-desc">${t.desc}</div>
+    </div>`).join('');
+}
+function useTemplate(task) {
+  showView('chat');
+  document.getElementById('chatInput').value = task;
+  sendChat();
+}
+
+// ═══ RECENT BUILDS ═══
+async function loadRecentBuilds() {
+  try {
+    const r = await fetch(API + '/company-history/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('recentBuildsList');
+    const h = (d.recent_history || []).slice(0, 5);
+    if (h.length === 0) { el.innerHTML = '<div style="padding:4px 10px;font-size:11px;color:var(--tx3)">No builds yet</div>'; return; }
+    el.innerHTML = h.map(item => {
+      const name = (item.task || '').substring(0, 28);
+      const serial = item.id ? `#${item.id} ` : '';
+      const time = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : '';
+      return `<div class="recent-build" onclick="showView('chat');addMsg('assistant','Previous build: ${name.replace(/'/g,'')}')">
+        <span class="rb-icon">🔹</span><span class="rb-name"><strong style="color:var(--y)">${serial}</strong>${name}</span><span class="rb-time">${time}</span>
+      </div>`;
+    }).join('');
+  } catch (e) { /* silent */ }
+}
+
+// ═══ MEETINGS ═══
+const AGENT_COLORS = {ceo:'var(--c)',backend:'var(--v2)',frontend:'var(--m2)',security:'var(--g)',devops:'var(--o)',ai_research:'var(--y)',architecture:'var(--c2)',hr:'var(--m)',finance:'var(--g2)',marketing:'var(--v)'};
+const AGENT_EMOJI = {ceo:'🏛️',backend:'⚙️',frontend:'🎨',security:'🔒',devops:'🚀',ai_research:'🧠',architecture:'📐',hr:'👥',finance:'💰',marketing:'📣'};
+
+window.currentMeetingMsgs = [];
+
+async function generateMeeting() {
+  const task = document.getElementById('meetingTask').value.trim();
+  if (!task) return;
+  const btn = document.getElementById('meetingBtn');
+  const el = document.getElementById('meetingTranscript');
+  btn.disabled = true;
+  el.innerHTML = '<div style="color:var(--y);font-size:12px;font-family:var(--fm)">🎙️ Generating meeting transcript...</div>';
+  document.getElementById('meetingChatBox').style.display = 'none';
+  try {
+    const r = await fetch(API + '/meetings/generate/', {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ task, departments: ['ceo','backend','frontend','security','devops'] })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Meeting failed');
+    window.currentMeetingMsgs = d.messages || [];
+    renderMeetingTranscript();
+    document.getElementById('meetingChatBox').style.display = 'flex';
+    showToast(`Meeting generated — ${d.message_count || 0} messages`, 'success');
+  } catch (e) { el.innerHTML = `<div style="color:var(--m2)">❌ ${e.message}</div>`; }
+  btn.disabled = false;
+}
+
+function renderMeetingTranscript() {
+  const el = document.getElementById('meetingTranscript');
+  el.innerHTML = window.currentMeetingMsgs.map(m => {
+    const color = AGENT_COLORS[m.agent] || 'var(--tx2)';
+    const emoji = AGENT_EMOJI[m.agent] || '💬';
+    const isUser = m.role === 'user' || m.agent === 'user';
+    const dispAv = isUser ? USERNAME.charAt(0).toUpperCase() : emoji;
+    const dispName = isUser ? 'You' : (m.agent_name || m.name || m.agent);
+    
+    return `<div class="meeting-msg ${isUser ? 'msg-user' : ''}">
+      <div class="meeting-av" style="border-color:${color}">${dispAv}</div>
+      <div><div class="meeting-name" style="color:${color}">${dispName}</div>
+      <div class="meeting-text">${formatMd(m.message || m.content || '')}</div></div>
+    </div>`;
+  }).join('');
+}
+
+async function sendMeetingChat() {
+  const input = document.getElementById('meetingChatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  
+  // Optimistically add user msg
+  window.currentMeetingMsgs.push({ role: 'user', agent: 'user', content: msg });
+  renderMeetingTranscript();
+  
+  const el = document.getElementById('meetingTranscript');
+  el.innerHTML += '<div style="color:var(--tx3);font-size:12px;margin-top:5px">Typing...</div>';
+  
+  try {
+    const r = await fetch(API + '/meetings/chat/', {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ message: msg, history: window.currentMeetingMsgs })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Failed to send');
+    
+    window.currentMeetingMsgs.push(d.response);
+    renderMeetingTranscript();
+  } catch (e) {
+    el.innerHTML += `<div style="color:var(--m2)">❌ ${e.message}</div>`;
+  }
+}
+
+async function loadMeetings() {
+  try {
+    const r = await fetch(API + '/meetings/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('meetingsBody');
+    const m = d.meetings || [];
+    if (m.length === 0) { el.innerHTML = '<div class="empty">No meetings yet — start one above!</div>'; return; }
+    el.innerHTML = m.map(item => `
+      <div class="mem-card" style="cursor:pointer" onclick="viewMeeting('${item.job_id || item.meeting_id}')">
+        <div class="mem-agent">🎙️ ${(item.task||'').substring(0,60)}</div>
+        <div class="mem-task">${item.message_count || '?'} messages</div>
+        <div style="font-size:10px;color:var(--tx3);margin-top:3px">${item.created_at || ''}</div>
+      </div>`).join('');
+  } catch (e) { document.getElementById('meetingsBody').innerHTML = '<div class="empty">Failed to load</div>'; }
+}
+
+async function viewMeeting(id) {
+  try {
+    const r = await fetch(API + '/meetings/' + id + '/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('meetingTranscript');
+    const msgs = d.messages || (d.transcript ? JSON.parse(d.transcript) : []);
+    window.currentMeetingMsgs = msgs;
+    renderMeetingTranscript();
+    document.getElementById('meetingChatBox').style.display = 'flex';
+  } catch (e) { /* silent */ }
+}
+
+// ═══ ENHANCED PROJECTS ═══
+async function viewProject(name) {
+  try {
+    const r = await fetch(API + '/files/projects/' + encodeURIComponent(name) + '/tree/', { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('projBody');
+    const tree = d.tree || {};
+    let html = '<div style="display:grid;grid-template-columns:260px 1fr;gap:16px;min-height:300px">';
+    html += '<div class="file-tree" style="border-right:1px solid var(--b1);padding-right:12px">';
+    html += '<div style="margin-bottom:8px"><button class="btn-new" onclick="loadProjects()">← Back</button></div>';
+    html += renderTree(tree.children || [], name);
+    html += '</div>';
+    html += '<div id="codeDisplay"><div class="empty">Select a file to view</div></div>';
+    html += '</div>';
+    el.innerHTML = html;
+  } catch (e) { /* silent */ }
+}
+
+function renderTree(children, project, indent = 0) {
+  return children.map(c => {
+    const pad = indent * 12;
+    if (c.type === 'directory') {
+      return `<div class="file-item" style="padding-left:${pad+10}px;color:var(--y)"><span class="fi-icon">📁</span><span class="fi-name">${c.name}</span></div>` + renderTree(c.children || [], project, indent + 1);
+    }
+    const sz = c.size_bytes > 1024 ? (c.size_bytes/1024).toFixed(1)+'K' : c.size_bytes+'B';
+    return `<div class="file-item" style="padding-left:${pad+10}px" onclick="viewFile('${project}','${c.path}')"><span class="fi-icon">📄</span><span class="fi-name">${c.name}</span><span class="fi-size">${sz}</span></div>`;
+  }).join('');
+}
+
+async function viewFile(project, path) {
+  try {
+    const r = await fetch(API + '/files/projects/' + encodeURIComponent(project) + '/read/?file_path=' + encodeURIComponent(path), { headers: authHeaders() });
+    if (!r.ok) return;
+    const d = await r.json();
+    document.querySelectorAll('.file-item').forEach(f => f.classList.remove('active'));
+    event.target.closest('.file-item')?.classList.add('active');
+    document.getElementById('codeDisplay').innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-family:var(--fm);font-size:11px;color:var(--c)">${path}</span>
+        <span style="font-family:var(--fm);font-size:10px;color:var(--tx3)">${d.language} • ${d.lines} lines</span>
+      </div>
+      <div class="code-viewer">${(d.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+  } catch (e) { document.getElementById('codeDisplay').innerHTML = '<div class="empty">Cannot load file</div>'; }
+}
+
+// ═══ TOAST ═══
+function showToast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+// ═══ PARTICLES ═══
+function initParticles() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particleCanvas';
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4';
+  document.body.insertBefore(canvas, document.body.firstChild);
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const COLORS = ['#00d4ff','#7c3aed','#00ff9d','#ff006e','#ffd700'];
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 0.3;
+      this.speedY = (Math.random() - 0.5) * 0.3;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.opacity = Math.random() * 0.5 + 0.1;
+      this.pulse = Math.random() * Math.PI * 2;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.pulse += 0.02;
+      this.opacity = 0.1 + Math.sin(this.pulse) * 0.2;
+      if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = this.opacity;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = particles[i].color;
+          ctx.globalAlpha = (1 - dist / 120) * 0.08;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawConnections();
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ═══ INIT ═══
+if (TOKEN) { enterApp(); }
+document.addEventListener('DOMContentLoaded', () => {
+  if (TOKEN) loadRecentBuilds();
+  // Particles disabled for a cleaner, professional look
+});
+</script>
+</body>
+</html>

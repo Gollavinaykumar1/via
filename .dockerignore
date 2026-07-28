@@ -1,0 +1,75 @@
+# ============================================================
+# .dockerignore — Exclude unnecessary files from Docker build
+# ============================================================
+
+# Version control
+.git
+.github
+.gitignore
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Node.js (not needed at runtime)
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Environment files (secrets must NOT be baked into images)
+.env
+.env.local
+.env.production
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# IDE & editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker files (no need to copy themselves)
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+.dockerignore
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+tests/
+
+# Documentation
+docs/
+*.md
+!README.md
+LICENSE
+
+# Logs (mounted as volumes, not baked in)
+logs/
+*.log
+
+# Generated projects (large artifacts)
+projects/
+
+# Misc
+celerybeat-schedule
+celerybeat.pid
+.fix_cooldown.json
+SECURITY_REPORT.md

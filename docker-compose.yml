@@ -1,0 +1,127 @@
+# ============================================================
+# VIA — Docker Compose (Development & Production)
+# ============================================================
+# Usage:
+#   docker compose up -d          # Start all services
+#   docker compose up -d --build  # Rebuild and start
+#   docker compose logs -f api    # Follow API logs
+#   docker compose down -v        # Stop and remove volumes
+# ============================================================
+
+services:
+  # ---- PostgreSQL Database ----
+  postgres:
+    image: postgres:15-alpine
+    container_name: via_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ai_digital_team
+      POSTGRES_USER: ai_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-StrongPassword123!}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_admin -d ai_digital_team"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---- Redis (Broker + Cache) ----
+  redis:
+    image: redis:7-alpine
+    container_name: via_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---- FastAPI Application ----
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: via_api
+    restart: unless-stopped
+    env_file: [.env]
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_URL: redis://redis:6379/1
+      APP_ENV: production
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+      - ./projects:/app/projects
+      - ./index.html:/app/index.html:ro
+      - ./via-chat.css:/app/via-chat.css:ro
+      - ./company_logo.png:/app/company_logo.png:ro
+      - ./login_bg.png:/app/login_bg.png:ro
+      - ./backend:/app/backend:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+
+  # ---- Celery Worker ----
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: via_worker
+    restart: unless-stopped
+    command: >
+      celery -A backend.tasks.celery_app worker
+      --loglevel=info
+      --concurrency=2
+    env_file: [.env]
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_URL: redis://redis:6379/1
+    volumes:
+      - ./logs:/app/logs
+      - ./projects:/app/projects
+      - ./backend:/app/backend:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ---- pgAdmin (Database GUI) ----
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: via_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@via-platform.com
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  redis_data:
+  pgadmin_data:

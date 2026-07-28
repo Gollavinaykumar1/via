@@ -1,0 +1,74 @@
+databases:
+  - name: via-db
+    databaseName: ai_digital_team
+    user: ai_admin
+
+services:
+  - type: redis
+    name: via-redis
+    ipAllowList: []
+    plan: free
+
+  - type: worker
+    name: via-worker
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "celery -A backend.tasks.celery_app worker --loglevel=info --concurrency=2"
+    envVars:
+      - key: POSTGRES_URL
+        fromDatabase:
+          name: via-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: CELERY_RESULT_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: USE_GROQ
+        value: "true"
+      - key: USE_GEMINI
+        value: "true"
+      - key: USE_ANTHROPIC
+        value: "false"
+
+  - type: web
+    name: via-api
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: POSTGRES_URL
+        fromDatabase:
+          name: via-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: CELERY_RESULT_URL
+        fromService:
+          type: redis
+          name: via-redis
+          property: connectionString
+      - key: USE_GROQ
+        value: "true"
+      - key: USE_GEMINI
+        value: "true"
+      - key: USE_ANTHROPIC
+        value: "false"
