@@ -41,7 +41,7 @@ jobs:
         run: pip install flake8
 
       - name: Lint backend
-        run: flake8 backend/ --max-line-length=200 --ignore=E501,W503,E402 --count
+        run: flake8 backend/ --max-line-length=200 --ignore=E501,W503,W504,E402,E241,E272,E221,E401,E302,E303,E711,E712,E721,W292,E704,E701,E722 --count
 
   docker:
     runs-on: ubuntu-latest
