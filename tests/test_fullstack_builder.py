@@ -9,7 +9,7 @@ class TestDetectAppType:
         assert detect_app_type("Build a landing page for my startup") == "frontend"
 
     def test_frontend_portfolio(self):
-        # Portfolio websites may include backend for contact forms — fullstack_db is correct
+        # Portfolio websites may include backend — any type is valid
         result = detect_app_type("Create a portfolio showcase website")
         assert result in ("frontend", "fullstack", "fullstack_db")
 
@@ -17,7 +17,7 @@ class TestDetectAppType:
         assert detect_app_type("Build a quiz app with API and scoring") == "fullstack"
 
     def test_fullstack_game(self):
-        # Game leaderboard trackers need a database — fullstack_db is correct
+        # Game leaderboard needs a database — fullstack_db is correct
         result = detect_app_type("Create a game leaderboard tracker")
         assert result in ("fullstack", "fullstack_db")
 
@@ -33,39 +33,27 @@ class TestDetectAppType:
 
 class TestGenerateBackendFiles:
     def test_frontend_returns_empty(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("landing page", "frontend")
-        )
+        files = asyncio.run(generate_backend_files("landing page", "frontend"))
         assert files == {}
 
     def test_fullstack_has_main_py(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("Build a quiz app", "fullstack")
-        )
+        files = asyncio.run(generate_backend_files("Build a quiz app", "fullstack"))
         assert "main.py" in files
         assert "requirements.txt" in files
 
     def test_fullstack_db_has_models(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("Build a user management system", "fullstack_db")
-        )
+        files = asyncio.run(generate_backend_files("Build a user management system", "fullstack_db"))
         assert "main.py" in files
 
     def test_main_py_has_fastapi(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("Build a todo app", "fullstack")
-        )
+        files = asyncio.run(generate_backend_files("Build a todo app", "fullstack"))
         assert "FastAPI" in files["main.py"] or "fastapi" in files["main.py"]
 
     def test_requirements_has_fastapi(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("Build a blog", "fullstack")
-        )
+        files = asyncio.run(generate_backend_files("Build a blog", "fullstack"))
         assert "fastapi" in files["requirements.txt"]
 
     def test_gitignore_generated(self):
-        files = asyncio.get_event_loop().run_until_complete(
-            generate_backend_files("Build an app", "fullstack")
-        )
+        files = asyncio.run(generate_backend_files("Build an app", "fullstack"))
         assert ".gitignore" in files
         assert "__pycache__" in files[".gitignore"]
