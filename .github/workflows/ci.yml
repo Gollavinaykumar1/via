@@ -28,6 +28,12 @@ jobs:
           OLLAMA_URL: http://localhost:11434/api/generate
           POSTGRES_HOST: localhost
           JWT_SECRET_KEY: test-secret-key
+          USE_GROQ: "false"
+          USE_ANTHROPIC: "false"
+          USE_GEMINI: "false"
+          GROQ_API_KEY: "dummy"
+          GEMINI_API_KEY: "dummy"
+          ANTHROPIC_API_KEY: "dummy"
 
   lint:
     runs-on: ubuntu-latest
