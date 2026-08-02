@@ -66,10 +66,9 @@ docker-compose up --build
 ```
 
 Services:
-- **API**: http://localhost:8000
-- **Frontend**: http://localhost:8000 (served by FastAPI)
-- **pgAdmin**: http://localhost:5050
-- **Swagger**: http://localhost:8000/docs
+- **Frontend**: http://51.21.194.179:8000/ (served by FastAPI)
+- **pgAdmin**: http://51.21.194.179:5050/
+- **Swagger**: http://51.21.194.179:8000/docs
 
 ### Option B: Local Development
 
