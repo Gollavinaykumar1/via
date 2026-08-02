@@ -507,6 +507,17 @@ def _fix_nested_routers(files: dict) -> dict:
         app_content = app_content.replace('</HashRouter>', '</div>')
         files[app_key] = app_content
 
+    # Fix BrowserRouter for GitHub Pages
+    if main_key and "<BrowserRouter>" in files[main_key]:
+        files[main_key] = files[main_key].replace("<BrowserRouter>", "<BrowserRouter basename={import.meta.env.BASE_URL}>")
+    elif main_key and "<BrowserRouter" in files[main_key] and "basename" not in files[main_key]:
+        files[main_key] = files[main_key].replace("<BrowserRouter", "<BrowserRouter basename={import.meta.env.BASE_URL}")
+
+    if app_key and "<BrowserRouter>" in files[app_key]:
+        files[app_key] = files[app_key].replace("<BrowserRouter>", "<BrowserRouter basename={import.meta.env.BASE_URL}>")
+    elif app_key and "<BrowserRouter" in files[app_key] and "basename" not in files[app_key]:
+        files[app_key] = files[app_key].replace("<BrowserRouter", "<BrowserRouter basename={import.meta.env.BASE_URL}")
+
     return files
 
 

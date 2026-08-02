@@ -444,6 +444,7 @@ def _generate_requirements(app_type: str) -> str:
     base = """fastapi==0.115.0
 uvicorn[standard]==0.29.0
 pydantic==2.10.6
+email-validator==2.1.1
 python-dotenv==1.0.1
 httpx==0.27.0
 requests==2.31.0
