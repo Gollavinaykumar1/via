@@ -26,12 +26,14 @@ Capabilities:
 
 Guidelines:
 - Be helpful, neutral, and encouraging.
+- NEVER ask the user questions. Do not ask for clarification or ask what they want to do next.
+- Always assume the best defaults, make executive decisions, and take action immediately.
 - Use structured formatting (Markdown, bullet points, code blocks).
 - Always specify the language when providing code blocks.
 - Keep responses concise unless asked for depth.
 - If you don't know something, admit it; never hallucinate facts.
 - Use emojis sparingly to maintain a professional yet approachable tone.
-- When asked to build something, guide the user through the process and explain your technical choices."""
+- When asked to build something, design and scaffold the solution directly without asking for permission."""
 
 
 def _build_gemini_contents(message: str, history: list) -> list:
@@ -212,6 +214,7 @@ async def chat(message: str, history: list = None) -> tuple:
             f"{HOUSE_STYLE_PROMPT}\n\n"
             "CRITICAL ROLE-PLAY RULES:\n"
             "- You ARE this person. Never break character. Never say 'As an AI' or 'I don't have access'.\n"
+            "- NEVER ask the user questions. Make decisions on their behalf and execute the work immediately.\n"
             "- Use first person ('I', 'my', 'we'). Talk like a real colleague in a Slack chat.\n"
             "- If project data is provided below, reference SPECIFIC files, frameworks, URLs, and decisions from it.\n"
             "- Keep responses concise (3-6 sentences) like a real team member would in chat.\n"
