@@ -9,8 +9,14 @@
 <link rel="stylesheet" href="/via-chat.css?v=10">
 <style>
   #authPage {
-    background: url('/login_bg.png') center center / cover no-repeat !important;
-    background-color: #0a0a1a !important;
+    background: radial-gradient(circle at center, #111a28 0%, #060a12 100%) !important;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(0, 255, 170, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px !important;
+    background-color: #060a12 !important;
   }
   .auth-logo {
     width: 110px !important;
@@ -23,70 +29,159 @@
 <body>
 
 <div id="authPage">
-  <div class="auth-wrap">
-    <div class="auth-brand">
-      <img id="viaLogo" alt="VIA Logo" class="auth-logo">
-      <div class="via-display">VIA</div>
+  <!-- Top header -->
+  <div class="auth-header">
+    <div class="auth-header-left">
+      <img id="viaLogo" alt="VIA Logo" class="auth-header-logo" src="/company_logo.png">
+      <div class="auth-header-text">VIA</div>
     </div>
-    <div class="holo-card">
-      <div class="a-tabs" id="authTabs">
-        <button class="a-tab on" id="tabLogin" onclick="switchAuth('login')">Login</button>
-        <button class="a-tab" id="tabRegister" onclick="switchAuth('register')">Register</button>
-      </div>
-      <div id="authMsg" class="a-msg"></div>
+    <div class="auth-header-right">
+      <button class="auth-lang-btn">🌐 Language ▾</button>
+      <div class="auth-status">Status: <span class="auth-secure">Gateway Secure</span></div>
+    </div>
+  </div>
 
-      <!-- LOGIN FORM -->
-      <div id="loginForm">
-        <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="loginUser" type="email" placeholder="Enter your email" autocomplete="email"></div>
-        <div class="fld"><label class="fld-label">Password</label><input class="fld-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password"></div>
-        <button class="cyber-btn" id="loginBtn" onclick="doLogin()"><span class="lb">Access System</span></button>
-        <div style="text-align:center;margin-top:12px">
-          <button onclick="switchAuth('forgot')" style="background:none;border:none;color:var(--c);font-size:12px;cursor:pointer;text-decoration:underline">Forgot Password?</button>
+  <div class="auth-wrap new-auth-wrap">
+    <div class="holo-card split-holo-card">
+      
+      <!-- Left Pane -->
+      <div class="holo-left">
+        <img src="/company_logo.png" alt="VIA Logo" class="holo-left-logo">
+        <div class="holo-left-title">VIA</div>
+        <div class="holo-left-subtitle">AI Digital Team Workspace</div>
+        <div class="holo-left-desc">Unlock your team's AI potential. Log in to activate specialized agents for data processing, optimization, and validation.</div>
+        
+        <div class="holo-features">
+          <div class="holo-feat">
+            <span class="feat-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M7 17l10-10"/></svg>
+            </span>
+            <span>Agent Delegation & Workflows</span>
+          </div>
+          <div class="holo-feat">
+            <span class="feat-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </span>
+            <span>Enterprise-Grade Security</span>
+          </div>
+          <div class="holo-feat">
+            <span class="feat-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+            </span>
+            <span>Optimized Performance Insights</span>
+          </div>
         </div>
       </div>
 
-      <!-- REGISTER FORM -->
-      <div id="regForm" style="display:none">
-        <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="regUser" type="email" placeholder="Enter your email" autocomplete="email"></div>
-        <div class="fld"><label class="fld-label">Password</label><input class="fld-input" id="regPass" type="password" placeholder="Choose password (min 6 chars)" autocomplete="new-password"></div>
-        <button class="cyber-btn" id="regBtn" onclick="doRegister()"><span class="lb">Create Account</span></button>
-      </div>
+      <!-- Right Pane -->
+      <div class="holo-right">
+        <h2 class="holo-right-title">Welcome to the Gateway</h2>
+        
+        <div class="a-tabs" id="authTabs" style="display:none">
+          <button class="a-tab on" id="tabLogin" onclick="switchAuth('login')">Login</button>
+          <button class="a-tab" id="tabRegister" onclick="switchAuth('register')">Register</button>
+        </div>
+        <div id="authMsg" class="a-msg"></div>
 
-      <!-- EMAIL VERIFICATION FORM -->
-      <div id="verifyForm" style="display:none">
-        <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">
-          📬 A 6-digit verification code has been sent to your email.<br>
-          <span style="color:var(--y);font-size:11px">Check your inbox (or spam folder) for the code.</span>
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+          <div class="fld">
+            <div class="fld-input-wrap">
+              <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <input class="fld-input new-fld" id="loginUser" type="email" placeholder="Username or Email" autocomplete="email">
+            </div>
+          </div>
+          <div class="fld">
+            <div class="fld-input-wrap">
+              <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+              <input class="fld-input new-fld" id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+            </div>
+          </div>
+          <div style="text-align:right;margin-bottom:15px;margin-top:-5px">
+            <button onclick="switchAuth('forgot')" class="auth-link">Forgot Password?</button>
+          </div>
+          <button class="cyber-btn teal-btn" id="loginBtn" onclick="doLogin()"><span class="lb">Continue</span></button>
+          
+          <div class="sso-divider">
+            <span>Or sign in with:</span>
+          </div>
+          <div class="sso-buttons">
+            <button class="sso-btn" onclick="alert('Google SSO integration pending API keys')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            </button>
+            <button class="sso-btn" onclick="alert('GitHub SSO integration pending API keys')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            </button>
+            <button class="sso-btn" onclick="alert('Microsoft SSO integration pending API keys')">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H12z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H12z"/></svg>
+            </button>
+          </div>
+          <div style="text-align:center;margin-top:20px;font-size:12px;color:var(--tx2)">
+            Don't have an account? <button onclick="switchAuth('register')" class="auth-link">Create an account</button>
+          </div>
         </div>
-        <div class="fld"><label class="fld-label">Verification Code</label><input class="fld-input" id="verifyCode" type="text" placeholder="Enter 6-digit code" maxlength="6" autocomplete="one-time-code"></div>
-        <button class="cyber-btn" id="verifyBtn" onclick="doVerify()"><span class="lb">✅ Verify Email</span></button>
-        <div style="text-align:center;margin-top:10px">
-          <button onclick="switchAuth('login')" style="background:none;border:none;color:var(--tx3);font-size:11px;cursor:pointer">← Back to Login</button>
-        </div>
-      </div>
 
-      <!-- FORGOT PASSWORD FORM -->
-      <div id="forgotForm" style="display:none">
-        <div id="forgotStep1">
-          <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">Enter your email to receive a reset code.</div>
-          <div class="fld"><label class="fld-label">Email Address</label><input class="fld-input" id="forgotEmail" type="email" placeholder="Enter your email"></div>
-          <button class="cyber-btn" id="forgotBtn" onclick="doForgotRequest()"><span class="lb">Send Reset Code</span></button>
+        <!-- REGISTER FORM -->
+        <div id="regForm" style="display:none">
+          <div class="fld">
+            <div class="fld-input-wrap">
+              <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <input class="fld-input new-fld" id="regUser" type="email" placeholder="Email Address" autocomplete="email">
+            </div>
+          </div>
+          <div class="fld">
+            <div class="fld-input-wrap">
+              <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+              <input class="fld-input new-fld" id="regPass" type="password" placeholder="Choose Password" autocomplete="new-password">
+            </div>
+          </div>
+          <button class="cyber-btn teal-btn" id="regBtn" onclick="doRegister()"><span class="lb">Create Account</span></button>
+          <div style="text-align:center;margin-top:20px;font-size:12px;color:var(--tx2)">
+            Already have an account? <button onclick="switchAuth('login')" class="auth-link">Log in</button>
+          </div>
         </div>
-        <div id="forgotStep2" style="display:none">
+
+        <!-- EMAIL VERIFICATION FORM -->
+        <div id="verifyForm" style="display:none">
           <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">
-            📬 A password reset code has been sent to your email.<br>
+            📬 A 6-digit verification code has been sent to your email.<br>
             <span style="color:var(--y);font-size:11px">Check your inbox (or spam folder) for the code.</span>
           </div>
-          <div class="fld"><label class="fld-label">Reset Code</label><input class="fld-input" id="resetCode" type="text" placeholder="6-digit reset code" maxlength="6"></div>
-          <div class="fld"><label class="fld-label">New Password</label><input class="fld-input" id="resetPass" type="password" placeholder="New password (min 6 chars)"></div>
-          <button class="cyber-btn" id="resetBtn" onclick="doReset()"><span class="lb">🔒 Reset Password</span></button>
+          <div class="fld"><input class="fld-input new-fld" id="verifyCode" type="text" placeholder="Enter 6-digit code" maxlength="6" autocomplete="one-time-code" style="text-align:center;letter-spacing:4px;font-size:18px"></div>
+          <button class="cyber-btn teal-btn" id="verifyBtn" onclick="doVerify()"><span class="lb">✅ Verify Email</span></button>
+          <div style="text-align:center;margin-top:10px">
+            <button onclick="switchAuth('login')" class="auth-link">← Back to Login</button>
+          </div>
         </div>
-        <div style="text-align:center;margin-top:10px">
-          <button onclick="switchAuth('login')" style="background:none;border:none;color:var(--tx3);font-size:11px;cursor:pointer">← Back to Login</button>
-        </div>
-      </div>
 
+        <!-- FORGOT PASSWORD FORM -->
+        <div id="forgotForm" style="display:none">
+          <div id="forgotStep1">
+            <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">Enter your email to receive a reset code.</div>
+            <div class="fld"><div class="fld-input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></span><input class="fld-input new-fld" id="forgotEmail" type="email" placeholder="Enter your email"></div></div>
+            <button class="cyber-btn teal-btn" id="forgotBtn" onclick="doForgotRequest()"><span class="lb">Send Reset Code</span></button>
+          </div>
+          <div id="forgotStep2" style="display:none">
+            <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--tx2)">
+              📬 A password reset code has been sent to your email.<br>
+              <span style="color:var(--y);font-size:11px">Check your inbox (or spam folder) for the code.</span>
+            </div>
+            <div class="fld"><input class="fld-input new-fld" id="resetCode" type="text" placeholder="6-digit reset code" maxlength="6" style="text-align:center;letter-spacing:4px"></div>
+            <div class="fld"><div class="fld-input-wrap"><span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><input class="fld-input new-fld" id="resetPass" type="password" placeholder="New password"></div></div>
+            <button class="cyber-btn teal-btn" id="resetBtn" onclick="doReset()"><span class="lb">🔒 Reset Password</span></button>
+          </div>
+          <div style="text-align:center;margin-top:10px">
+            <button onclick="switchAuth('login')" class="auth-link">← Back to Login</button>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="auth-footer">
+    Legal | Links | Privacy Solution | &copy; 2026 Via Innovations
   </div>
 </div>
 
