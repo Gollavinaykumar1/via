@@ -7,7 +7,7 @@ from .logger import logger
 
 USE_GROQ      = os.getenv("USE_GROQ", "false").lower() == "true"
 GROQ_API_KEY  = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL    = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+GROQ_MODEL    = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 GROQ_MAX_TOK  = int(os.getenv("GROQ_MAX_TOKENS", "4000"))
 GROQ_TEMP     = float(os.getenv("GROQ_TEMPERATURE", "0.7"))
 GROQ_URL      = "https://api.groq.com/openai/v1/chat/completions"

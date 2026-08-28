@@ -579,7 +579,7 @@ async def generate_backend_files_llm(task: str, app_type: str) -> dict:
     files = _extract_llm_files(raw)
     
     if not _validate_llm_backend(files):
-        raise ValueError("LLM Backend Generator failed validation. Prompt should be updated to ensure valid FastAPI output.")
+        raise ValueError("LLM Backend Generator failed validation — LLM returned empty or non-FastAPI output. Check Groq model and API key.")
         
     if "main.py" in files:
         files["main.py"] = files["main.py"].replace("sqlite+aiosqlite:///", "sqlite:///")
@@ -670,6 +670,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Reads DATABASE_URL set by Render's PostgreSQL service
 # Falls back to local SQLite for development
+GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 DATABASE_URL = (
     os.getenv("DATABASE_URL")
     or os.getenv("RENDER_DATABASE_URL")
