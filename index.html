@@ -36,7 +36,7 @@
       <div class="auth-header-text">VIA</div>
     </div>
     <div class="auth-header-right">
-      <select class="auth-lang-btn" onchange="showMsg('Language switched to ' + this.options[this.selectedIndex].text, true)" style="appearance: none; -webkit-appearance: none; padding-right: 25px; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ccc%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position-x: 100%; background-position-y: 50%;">
+      <select id="langSelect" class="auth-lang-btn" onchange="switchLang(this.value)" style="appearance: none; -webkit-appearance: none; padding-right: 25px; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ccc%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position-x: 100%; background-position-y: 50%;">
         <option value="en" style="background: #111a28; color: #fff;">🌐 English</option>
         <option value="te" style="background: #111a28; color: #fff;">🌐 Telugu (తెలుగు)</option>
         <option value="hi" style="background: #111a28; color: #fff;">🌐 Hindi (हिन्दी)</option>
@@ -82,7 +82,7 @@
 
       <!-- Right Pane -->
       <div class="holo-right">
-        <h2 class="holo-right-title">Welcome to VIA</h2>
+        <h2 class="holo-right-title" data-i18n="welcomeTitle">Welcome to VIA</h2>
         
         <div class="a-tabs" id="authTabs" style="display:none">
           <button class="a-tab on" id="tabLogin" onclick="switchAuth('login')">Login</button>
@@ -95,19 +95,19 @@
           <div class="fld">
             <div class="fld-input-wrap">
               <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-              <input class="fld-input new-fld" id="loginUser" type="email" placeholder="Username or Email" autocomplete="email">
+              <input class="fld-input new-fld" id="loginUser" type="email" placeholder="Username or Email" data-i18n-placeholder="emailPlaceholder" autocomplete="email">
             </div>
           </div>
           <div class="fld">
             <div class="fld-input-wrap">
               <span class="input-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-              <input class="fld-input new-fld" id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+              <input class="fld-input new-fld" id="loginPass" type="password" placeholder="Password" data-i18n-placeholder="passwordPlaceholder" autocomplete="current-password">
             </div>
           </div>
           <div style="text-align:right;margin-bottom:15px;margin-top:-5px">
-            <button onclick="switchAuth('forgot')" class="auth-link">Forgot Password?</button>
+            <button onclick="switchAuth('forgot')" class="auth-link" data-i18n="forgotPassword">Forgot Password?</button>
           </div>
-          <button class="cyber-btn teal-btn" id="loginBtn" onclick="doLogin()"><span class="lb">Continue</span></button>
+          <button class="cyber-btn teal-btn" id="loginBtn" onclick="doLogin()"><span class="lb" data-i18n="continueBtn">Continue</span></button>
           
 
           <div style="text-align:center;margin-top:20px;font-size:12px;color:var(--tx2)">
@@ -1119,4 +1119,132 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
+<script>
+// ═══ LANGUAGE TRANSLATION SYSTEM ═══
+const i18nDict = {
+  en: {
+    welcomeTitle: 'Welcome to VIA',
+    emailPlaceholder: 'Username or Email',
+    passwordPlaceholder: 'Password',
+    forgotPassword: 'Forgot Password?',
+    continueBtn: 'Continue',
+    dontHaveAccount: "Don't have an account?",
+    createAccount: 'Create an account',
+    subtitle: 'AI Digital Team Workspace',
+    desc: "Unlock your team's AI potential. Log in to activate specialized agents for data processing, optimization, and validation.",
+    feat1: 'Agent Delegation & Workflows',
+    feat2: 'Enterprise-Grade Security',
+    feat3: 'Optimized Performance Insights',
+    statusText: 'Gateway Secure'
+  },
+  te: {
+    welcomeTitle: 'VIA కి స్వాగతం',
+    emailPlaceholder: 'వినియోగదారు పేరు లేదా ఇమెయిల్',
+    passwordPlaceholder: 'పాస్‌వర్డ్',
+    forgotPassword: 'పాస్‌వర్డ్ మర్చిపోయారా?',
+    continueBtn: 'కొనసాగించు',
+    dontHaveAccount: 'ఖాతా లేదా?',
+    createAccount: 'ఖాతా సృష్టించు',
+    subtitle: 'AI డిజిటల్ టీమ్ వర్క్‌స్పేస్',
+    desc: 'మీ జట్టు యొక్క AI సామర్థ్యాన్ని అన్‌లాక్ చేయండి. డేటా ప్రాసెసింగ్ కోసం ప్రత్యేక ఏజెంట్‌లను యాక్టివేట్ చేయడానికి లాగిన్ అవ్వండి.',
+    feat1: 'ఏజెంట్ డెలిగేషన్ & వర్క్‌ఫ్లోలు',
+    feat2: 'ఎంటర్‌ప్రైజ్-గ్రేడ్ సెక్యూరిటీ',
+    feat3: 'ఆప్టిమైజ్డ్ పెర్ఫార్మెన్స్ అంతర్దృష్టులు',
+    statusText: 'గేట్‌వే సురక్షితం'
+  },
+  hi: {
+    welcomeTitle: 'VIA में आपका स्वागत है',
+    emailPlaceholder: 'उपयोगकर्ता नाम या ईमेल',
+    passwordPlaceholder: 'पासवर्ड',
+    forgotPassword: 'पासवर्ड भूल गए?',
+    continueBtn: 'जारी रखें',
+    dontHaveAccount: 'खाता नहीं है?',
+    createAccount: 'खाता बनाएं',
+    subtitle: 'AI डिजिटल टीम वर्कस्पेस',
+    desc: 'अपनी टीम की AI क्षमता को अनलॉक करें। डेटा प्रोसेसिंग के लिए विशेष एजेंटों को सक्रिय करने हेतु लॉगिन करें।',
+    feat1: 'एजेंट डेलिगेशन और वर्कफ़्लो',
+    feat2: 'एंटरप्राइज़-ग्रेड सुरक्षा',
+    feat3: 'अनुकूलित प्रदर्शन अंतर्दृष्टि',
+    statusText: 'गेटवे सुरक्षित'
+  },
+  ta: {
+    welcomeTitle: 'VIA-க்கு வரவேற்கிறோம்',
+    emailPlaceholder: 'பயனர்பெயர் அல்லது மின்னஞ்சல்',
+    passwordPlaceholder: 'கடவுச்சொல்',
+    forgotPassword: 'கடவுச்சொல் மறந்தீர்களா?',
+    continueBtn: 'தொடரவும்',
+    dontHaveAccount: 'கணக்கு இல்லையா?',
+    createAccount: 'கணக்கு உருவாக்கு',
+    subtitle: 'AI டிஜிட்டல் குழு பணியிடம்',
+    desc: 'உங்கள் குழுவின் AI திறனை திறக்கவும். தரவு செயலாக்கத்திற்கான சிறப்பு முகவர்களை செயல்படுத்த உள்நுழைக.',
+    feat1: 'ஏஜென்ட் பதிலாளி & பணிப்பாய்வுகள்',
+    feat2: 'நிறுவன தர பாதுகாப்பு',
+    feat3: 'உகந்த செயல்திறன் நுண்ணறிவு',
+    statusText: 'நுழைவாயில் பாதுகாப்பானது'
+  },
+  kn: {
+    welcomeTitle: 'VIA ಗೆ ಸ್ವಾಗತ',
+    emailPlaceholder: 'ಬಳಕೆದಾರರ ಹೆಸರು ಅಥವಾ ಇಮೇಲ್',
+    passwordPlaceholder: 'ಪಾಸ್‌ವರ್ಡ್',
+    forgotPassword: 'ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?',
+    continueBtn: 'ಮುಂದುವರಿಸಿ',
+    dontHaveAccount: 'ಖಾತೆ ಇಲ್ಲವೇ?',
+    createAccount: 'ಖಾತೆ ರಚಿಸಿ',
+    subtitle: 'AI ಡಿಜಿಟಲ್ ತಂಡ ಕಾರ್ಯಕ್ಷೇತ್ರ',
+    desc: 'ನಿಮ್ಮ ತಂಡದ AI ಸಾಮರ್ಥ್ಯವನ್ನು ತೆರೆಯಿರಿ. ಡೇಟಾ ಸಂಸ್ಕರಣೆಗಾಗಿ ವಿಶೇಷ ಏಜೆಂಟ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಲಾಗಿನ್ ಮಾಡಿ.',
+    feat1: 'ಏಜೆಂಟ್ ನಿಯೋಗ & ವರ್ಕ್‌ಫ್ಲೋಗಳು',
+    feat2: 'ಎಂಟರ್‌ಪ್ರೈಸ್-ಗ್ರೇಡ್ ಸುರಕ್ಷತೆ',
+    feat3: 'ಆಪ್ಟಿಮೈಸ್ಡ್ ಕಾರ್ಯಕ್ಷಮತೆ ಒಳನೋಟಗಳು',
+    statusText: 'ಗೇಟ್‌ವೇ ಸುರಕ್ಷಿತ'
+  },
+  mr: {
+    welcomeTitle: 'VIA मध्ये आपले स्वागत आहे',
+    emailPlaceholder: 'वापरकर्तानाव किंवा ईमेल',
+    passwordPlaceholder: 'पासवर्ड',
+    forgotPassword: 'पासवर्ड विसरलात?',
+    continueBtn: 'सुरू ठेवा',
+    dontHaveAccount: 'खाते नाही?',
+    createAccount: 'खाते तयार करा',
+    subtitle: 'AI डिजिटल टीम वर्कस्पेस',
+    desc: 'तुमच्या टीमची AI क्षमता अनलॉक करा. डेटा प्रक्रियेसाठी विशेष एजंट सक्रिय करण्यासाठी लॉगिन करा.',
+    feat1: 'एजंट प्रतिनिधित्व आणि वर्कफ्लो',
+    feat2: 'एंटरप्राइज-ग्रेड सुरक्षा',
+    feat3: 'ऑप्टिमाइज्ड कार्यप्रदर्शन अंतर्दृष्टी',
+    statusText: 'गेटवे सुरक्षित'
+  }
+};
+
+function switchLang(lang) {
+  const t = i18nDict[lang] || i18nDict['en'];
+  // Translate text elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  // Translate placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key]) el.placeholder = t[key];
+  });
+  // Translate left pane subtitle and description
+  const sub = document.querySelector('.holo-left-subtitle');
+  if (sub) sub.textContent = t.subtitle;
+  const desc = document.querySelector('.holo-left-desc');
+  if (desc) desc.textContent = t.desc;
+  // Translate feature list
+  const feats = document.querySelectorAll('.holo-feat span:last-child');
+  if (feats[0]) feats[0].textContent = t.feat1;
+  if (feats[1]) feats[1].textContent = t.feat2;
+  if (feats[2]) feats[2].textContent = t.feat3;
+  // Translate status
+  const status = document.querySelector('.auth-secure');
+  if (status) status.textContent = t.statusText;
+  // Translate "Don't have an account" text node
+  const dontHaveDiv = document.querySelector('[data-i18n-dont]');
+  if (dontHaveDiv) dontHaveDiv.childNodes[0].textContent = t.dontHaveAccount + ' ';
+  const createBtn = document.querySelector('[data-i18n="createAccount"]');
+  if (createBtn) createBtn.textContent = t.createAccount;
+}
+</script>
+
 </html>
