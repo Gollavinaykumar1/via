@@ -191,18 +191,18 @@
       <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     </div>
     <nav class="sb-nav">
-      <div class="sb-sec">Main</div>
-      <button class="sb-item on" data-view="chat" onclick="showView('chat')"><span class="sb-icon">💬</span>Chat</button>
-      <button class="sb-item" data-view="dashboard" onclick="showView('dashboard')"><span class="sb-icon">📊</span>Dashboard</button>
-      <button class="sb-item" data-view="build" onclick="showView('build')"><span class="sb-icon">🏗️</span>Build</button>
-      <div class="sb-sec">Data</div>
-      <button class="sb-item" data-view="projects" onclick="showView('projects')"><span class="sb-icon">📁</span>Projects</button>
-      <button class="sb-item" data-view="memory" onclick="showView('memory')"><span class="sb-icon">🧠</span>Memory</button>
-      <button class="sb-item" data-view="history" onclick="showView('history')"><span class="sb-icon">📋</span>History</button>
-      <button class="sb-item" data-view="meetings" onclick="showView('meetings')"><span class="sb-icon">🎙️</span>Meetings</button>
-      <div class="sb-sec">Company</div>
-      <button class="sb-item" data-view="templates" onclick="showView('templates')"><span class="sb-icon">📝</span>Templates</button>
-      <button class="sb-item" data-view="org" onclick="showView('org')"><span class="sb-icon">🏢</span>Org Chart</button>
+      <div class="sb-sec" data-i18n="navMain">Main</div>
+      <button class="sb-item on" data-view="chat" onclick="showView('chat')"><span class="sb-icon">💬</span><span data-i18n="navChat">Chat</span></button>
+      <button class="sb-item" data-view="dashboard" onclick="showView('dashboard')"><span class="sb-icon">📊</span><span data-i18n="navDashboard">Dashboard</span></button>
+      <button class="sb-item" data-view="build" onclick="showView('build')"><span class="sb-icon">🏗️</span><span data-i18n="navBuild">Build</span></button>
+      <div class="sb-sec" data-i18n="navData">Data</div>
+      <button class="sb-item" data-view="projects" onclick="showView('projects')"><span class="sb-icon">📁</span><span data-i18n="navProjects">Projects</span></button>
+      <button class="sb-item" data-view="memory" onclick="showView('memory')"><span class="sb-icon">🧠</span><span data-i18n="navMemory">Memory</span></button>
+      <button class="sb-item" data-view="history" onclick="showView('history')"><span class="sb-icon">📋</span><span data-i18n="navHistory">History</span></button>
+      <button class="sb-item" data-view="meetings" onclick="showView('meetings')"><span class="sb-icon">🎙️</span><span data-i18n="navMeetings">Meetings</span></button>
+      <div class="sb-sec" data-i18n="navCompany">Company</div>
+      <button class="sb-item" data-view="templates" onclick="showView('templates')"><span class="sb-icon">📝</span><span data-i18n="navTemplates">Templates</span></button>
+      <button class="sb-item" data-view="org" onclick="showView('org')"><span class="sb-icon">🏢</span><span data-i18n="navOrg">Org Chart</span></button>
     </nav>
     <div class="sb-builds" id="recentBuilds"><div class="sb-builds-title">Recent Builds</div><div id="recentBuildsList"></div></div>
     <div class="sb-footer">
@@ -374,11 +374,11 @@
           <div class="panel-head"><span class="panel-title">Departments</span></div>
           <div class="panel-body" id="orgBody">
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-              <div class="mem-card"><div class="mem-agent">🏛️ CEO</div><div class="mem-task">Strategy & delegation</div></div>
-              <div class="mem-card"><div class="mem-agent">⚙️ Backend</div><div class="mem-task">APIs, databases, services</div></div>
-              <div class="mem-card"><div class="mem-agent">🎨 Frontend</div><div class="mem-task">React UI, design, UX</div></div>
-              <div class="mem-card"><div class="mem-agent">🔒 Security</div><div class="mem-task">Auth, encryption, threats</div></div>
-              <div class="mem-card"><div class="mem-agent">🚀 DevOps</div><div class="mem-task">CI/CD, infra, deployment</div></div>
+              <div class="mem-card"><div class="mem-agent">🏛️ Vinay</div><div class="mem-task">Strategy & delegation</div></div>
+              <div class="mem-card"><div class="mem-agent">⚙️ Maha</div><div class="mem-task">APIs, databases, services</div></div>
+              <div class="mem-card"><div class="mem-agent">🎨 Chandra</div><div class="mem-task">React UI, design, UX</div></div>
+              <div class="mem-card"><div class="mem-agent">🔒 Lakshmikanth</div><div class="mem-task">Auth, encryption, threats</div></div>
+              <div class="mem-card"><div class="mem-agent">🚀 Sai Mani</div><div class="mem-task">CI/CD, infra, deployment</div></div>
               <div class="mem-card"><div class="mem-agent">🧠 AI Research</div><div class="mem-task">LLM strategy, ML models</div></div>
               <div class="mem-card"><div class="mem-agent">📐 Architecture</div><div class="mem-task">System design, data flow</div></div>
               <div class="mem-card"><div class="mem-agent">👥 HR</div><div class="mem-task">Team structure, hiring</div></div>
@@ -1137,14 +1137,15 @@ const i18nDict = {
     passwordPlaceholder: 'Password',
     forgotPassword: 'Forgot Password?',
     continueBtn: 'Continue',
-    dontHaveAccount: "Don't have an account?",
-    createAccount: 'Create an account',
     subtitle: 'AI Digital Team Workspace',
     desc: "Unlock your team's AI potential. Log in to activate specialized agents for data processing, optimization, and validation.",
     feat1: 'Agent Delegation & Workflows',
     feat2: 'Enterprise-Grade Security',
     feat3: 'Optimized Performance Insights',
-    statusText: 'Gateway Secure'
+    statusText: 'Gateway Secure',
+    navMain: 'Main', navChat: 'Chat', navDashboard: 'Dashboard', navBuild: 'Build',
+    navData: 'Data', navProjects: 'Projects', navMemory: 'Memory', navHistory: 'History', navMeetings: 'Meetings',
+    navCompany: 'Company', navTemplates: 'Templates', navOrg: 'Org Chart'
   },
   te: {
     welcomeTitle: 'VIA కి స్వాగతం',
@@ -1152,14 +1153,15 @@ const i18nDict = {
     passwordPlaceholder: 'పాస్‌వర్డ్',
     forgotPassword: 'పాస్‌వర్డ్ మర్చిపోయారా?',
     continueBtn: 'కొనసాగించు',
-    dontHaveAccount: 'ఖాతా లేదా?',
-    createAccount: 'ఖాతా సృష్టించు',
     subtitle: 'AI డిజిటల్ టీమ్ వర్క్‌స్పేస్',
     desc: 'మీ జట్టు యొక్క AI సామర్థ్యాన్ని అన్‌లాక్ చేయండి. డేటా ప్రాసెసింగ్ కోసం ప్రత్యేక ఏజెంట్‌లను యాక్టివేట్ చేయడానికి లాగిన్ అవ్వండి.',
     feat1: 'ఏజెంట్ డెలిగేషన్ & వర్క్‌ఫ్లోలు',
     feat2: 'ఎంటర్‌ప్రైజ్-గ్రేడ్ సెక్యూరిటీ',
     feat3: 'ఆప్టిమైజ్డ్ పెర్ఫార్మెన్స్ అంతర్దృష్టులు',
-    statusText: 'గేట్‌వే సురక్షితం'
+    statusText: 'గేట్‌వే సురక్షితం',
+    navMain: 'ప్రధాన', navChat: 'చాట్', navDashboard: 'డాష్‌బోర్డ్', navBuild: 'నిర్మించు',
+    navData: 'డేటా', navProjects: 'ప్రాజెక్టులు', navMemory: 'మెమరీ', navHistory: 'చరిత్ర', navMeetings: 'సమావేశాలు',
+    navCompany: 'కంపెనీ', navTemplates: 'టెంప్లేట్లు', navOrg: 'సంస్థ చార్ట్'
   },
   hi: {
     welcomeTitle: 'VIA में आपका स्वागत है',
@@ -1167,14 +1169,15 @@ const i18nDict = {
     passwordPlaceholder: 'पासवर्ड',
     forgotPassword: 'पासवर्ड भूल गए?',
     continueBtn: 'जारी रखें',
-    dontHaveAccount: 'खाता नहीं है?',
-    createAccount: 'खाता बनाएं',
     subtitle: 'AI डिजिटल टीम वर्कस्पेस',
     desc: 'अपनी टीम की AI क्षमता को अनलॉक करें। डेटा प्रोसेसिंग के लिए विशेष एजेंटों को सक्रिय करने हेतु लॉगिन करें।',
     feat1: 'एजेंट डेलिगेशन और वर्कफ़्लो',
     feat2: 'एंटरप्राइज़-ग्रेड सुरक्षा',
     feat3: 'अनुकूलित प्रदर्शन अंतर्दृष्टि',
-    statusText: 'गेटवे सुरक्षित'
+    statusText: 'गेटवे सुरक्षित',
+    navMain: 'मुख्य', navChat: 'चैट', navDashboard: 'डैशबोर्ड', navBuild: 'बनाएं',
+    navData: 'डेटा', navProjects: 'परियोजनाएं', navMemory: 'मेमोरी', navHistory: 'इतिहास', navMeetings: 'बैठकें',
+    navCompany: 'कंपनी', navTemplates: 'टेम्पलेट', navOrg: 'संगठन चार्ट'
   },
   ta: {
     welcomeTitle: 'VIA-க்கு வரவேற்கிறோம்',
@@ -1182,14 +1185,15 @@ const i18nDict = {
     passwordPlaceholder: 'கடவுச்சொல்',
     forgotPassword: 'கடவுச்சொல் மறந்தீர்களா?',
     continueBtn: 'தொடரவும்',
-    dontHaveAccount: 'கணக்கு இல்லையா?',
-    createAccount: 'கணக்கு உருவாக்கு',
     subtitle: 'AI டிஜிட்டல் குழு பணியிடம்',
     desc: 'உங்கள் குழுவின் AI திறனை திறக்கவும். தரவு செயலாக்கத்திற்கான சிறப்பு முகவர்களை செயல்படுத்த உள்நுழைக.',
     feat1: 'ஏஜென்ட் பதிலாளி & பணிப்பாய்வுகள்',
     feat2: 'நிறுவன தர பாதுகாப்பு',
     feat3: 'உகந்த செயல்திறன் நுண்ணறிவு',
-    statusText: 'நுழைவாயில் பாதுகாப்பானது'
+    statusText: 'நுழைவாயில் பாதுகாப்பானது',
+    navMain: 'முகப்பு', navChat: 'அரட்டை', navDashboard: 'கட்டுப்பாட்டகம்', navBuild: 'உருவாக்கு',
+    navData: 'தரவு', navProjects: 'திட்டங்கள்', navMemory: 'நினைவகம்', navHistory: 'வரலாறு', navMeetings: 'கூட்டங்கள்',
+    navCompany: 'நிறுவனம்', navTemplates: 'வார்ப்புருக்கள்', navOrg: 'அமைப்பு விளக்கம்'
   },
   kn: {
     welcomeTitle: 'VIA ಗೆ ಸ್ವಾಗತ',
@@ -1197,14 +1201,15 @@ const i18nDict = {
     passwordPlaceholder: 'ಪಾಸ್‌ವರ್ಡ್',
     forgotPassword: 'ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?',
     continueBtn: 'ಮುಂದುವರಿಸಿ',
-    dontHaveAccount: 'ಖಾತೆ ಇಲ್ಲವೇ?',
-    createAccount: 'ಖಾತೆ ರಚಿಸಿ',
     subtitle: 'AI ಡಿಜಿಟಲ್ ತಂಡ ಕಾರ್ಯಕ್ಷೇತ್ರ',
     desc: 'ನಿಮ್ಮ ತಂಡದ AI ಸಾಮರ್ಥ್ಯವನ್ನು ತೆರೆಯಿರಿ. ಡೇಟಾ ಸಂಸ್ಕರಣೆಗಾಗಿ ವಿಶೇಷ ಏಜೆಂಟ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು ಲಾಗಿನ್ ಮಾಡಿ.',
     feat1: 'ಏಜೆಂಟ್ ನಿಯೋಗ & ವರ್ಕ್‌ಫ್ಲೋಗಳು',
     feat2: 'ಎಂಟರ್‌ಪ್ರೈಸ್-ಗ್ರೇಡ್ ಸುರಕ್ಷತೆ',
     feat3: 'ಆಪ್ಟಿಮೈಸ್ಡ್ ಕಾರ್ಯಕ್ಷಮತೆ ಒಳನೋಟಗಳು',
-    statusText: 'ಗೇಟ್‌ವೇ ಸುರಕ್ಷಿತ'
+    statusText: 'ಗೇಟ್‌ವೇ ಸುರಕ್ಷಿತ',
+    navMain: 'ಮುಖ್ಯ', navChat: 'ಚಾಟ್', navDashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್', navBuild: 'ನಿರ್ಮಿಸು',
+    navData: 'ಡೇಟಾ', navProjects: 'ಯೋಜನೆಗಳು', navMemory: 'ಮೆಮೊರಿ', navHistory: 'ಇತಿಹಾಸ', navMeetings: 'ಸಭೆಗಳು',
+    navCompany: 'ಕಂಪನಿ', navTemplates: 'ಟೆಂಪ್ಲೇಟ್‌ಗಳು', navOrg: 'ಸಂಸ್ಥೆ ಚಾರ್ಟ್'
   },
   mr: {
     welcomeTitle: 'VIA मध्ये आपले स्वागत आहे',
@@ -1212,16 +1217,18 @@ const i18nDict = {
     passwordPlaceholder: 'पासवर्ड',
     forgotPassword: 'पासवर्ड विसरलात?',
     continueBtn: 'सुरू ठेवा',
-    dontHaveAccount: 'खाते नाही?',
-    createAccount: 'खाते तयार करा',
     subtitle: 'AI डिजिटल टीम वर्कस्पेस',
     desc: 'तुमच्या टीमची AI क्षमता अनलॉक करा. डेटा प्रक्रियेसाठी विशेष एजंट सक्रिय करण्यासाठी लॉगिन करा.',
     feat1: 'एजंट प्रतिनिधित्व आणि वर्कफ्लो',
     feat2: 'एंटरप्राइज-ग्रेड सुरक्षा',
     feat3: 'ऑप्टिमाइज्ड कार्यप्रदर्शन अंतर्दृष्टी',
-    statusText: 'गेटवे सुरक्षित'
+    statusText: 'गेटवे सुरक्षित',
+    navMain: 'मुख्य', navChat: 'चॅट', navDashboard: 'डॅशबोर्ड', navBuild: 'बनवा',
+    navData: 'डेटा', navProjects: 'प्रकल्प', navMemory: 'मेमरी', navHistory: 'इतिहास', navMeetings: 'बैठका',
+    navCompany: 'कंपनी', navTemplates: 'टेम्पलेट', navOrg: 'संस्था तक्ता'
   }
 };
+
 
 function switchLang(lang) {
   const t = i18nDict[lang] || i18nDict['en'];
