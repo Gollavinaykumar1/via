@@ -79,9 +79,9 @@ class LLMProvider:
                 attempt += 1
                 logger.warning(f"Groq error attempt {attempt}: {e}")
                 if attempt <= self.max_retries:
-                    delay = self.retry_delay * (2 ** (attempt - 1))
+                    delay = min(self.retry_delay * (2 ** (attempt - 1)), 10)
                     if hasattr(e, "response") and e.response is not None and e.response.status_code == 429:
-                        delay = max(delay, 5) # Minimum 5s backoff for 429
+                        delay = 10 # Cap backoff for 429 to 10s
                     time.sleep(delay)
         return ""
 
@@ -140,7 +140,7 @@ class LLMProvider:
 
     def _generate_gemini(self, prompt: str) -> str:
         attempt = 0
-        max_attempts = 5  # increased to handle rate limits
+        max_attempts = 2  # Reduced to prevent frontend timeouts
         while attempt <= max_attempts:
             try:
                 start = time.time()
@@ -220,9 +220,9 @@ class LLMProvider:
                 attempt += 1
                 logger.warning(f"Groq Chat error attempt {attempt}: {e}")
                 if attempt <= self.max_retries:
-                    delay = self.retry_delay * (2 ** (attempt - 1))
+                    delay = min(self.retry_delay * (2 ** (attempt - 1)), 10)
                     if hasattr(e, "response") and e.response is not None and e.response.status_code == 429:
-                        delay = max(delay, 5) # Minimum 5s backoff for 429
+                        delay = 10 # Cap backoff for 429 to 10s
                     time.sleep(delay)
         return ""
 
@@ -296,7 +296,7 @@ class LLMProvider:
 
     def _chat_gemini(self, messages: list) -> str:
         attempt = 0
-        max_attempts = 5
+        max_attempts = 2
         while attempt <= max_attempts:
             try:
                 start = time.time()
@@ -356,7 +356,7 @@ class GeminiLLMProvider:
 
     def _generate(self, prompt: str) -> str:
         attempt = 0
-        max_attempts = 5
+        max_attempts = 2
         while attempt <= max_attempts:
             try:
                 start = time.time()
@@ -381,15 +381,15 @@ class GeminiLLMProvider:
                 logger.warning(f"Gemini-Frontend error attempt {attempt}: {e}")
                 if attempt <= max_attempts:
                     if "429" in str(e):
-                        logger.warning("Gemini rate limit hit — waiting 30s before retry...")
-                        time.sleep(30)
-                    else:
+                        logger.warning("Gemini rate limit hit — waiting 10s before retry...")
                         time.sleep(10)
+                    else:
+                        time.sleep(5)
         return ""
 
     def _chat(self, messages: list) -> str:
         attempt = 0
-        max_attempts = 5
+        max_attempts = 2
         while attempt <= max_attempts:
             try:
                 start = time.time()
@@ -414,10 +414,10 @@ class GeminiLLMProvider:
                 logger.warning(f"Gemini-Frontend chat error attempt {attempt}: {e}")
                 if attempt <= max_attempts:
                     if "429" in str(e):
-                        logger.warning("Gemini rate limit hit — waiting 30s before retry...")
-                        time.sleep(30)
-                    else:
+                        logger.warning("Gemini rate limit hit — waiting 10s before retry...")
                         time.sleep(10)
+                    else:
+                        time.sleep(5)
         return ""
 
     def generate(self, prompt: str) -> str:
