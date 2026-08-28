@@ -207,6 +207,9 @@ async def chat(message: str, history: list = None) -> tuple:
             historical_context = f"\n\n(Project #{project_id} was not found in the database. Let the user know politely.)\n"
 
     # 2) Build dynamic system prompt
+    from datetime import datetime
+    current_date_info = f"\n\nSystem Information:\nCurrent date is {datetime.now().strftime('%B %d, %Y')}.\n"
+
     if target_persona:
         dynamic_prompt = (
             f"You are {target_persona['name']}, the {target_persona['title']} at VIA.\n"
@@ -221,9 +224,10 @@ async def chat(message: str, history: list = None) -> tuple:
             "- Use casual professional tone: 'Yeah, so for that project I set up...', 'We went with React 18 for the frontend...'\n"
             "- If asked about a project, summarize what YOUR department specifically did.\n"
             f"{historical_context}"
+            f"{current_date_info}"
         )
     else:
-        dynamic_prompt = SYSTEM_PROMPT + historical_context
+        dynamic_prompt = SYSTEM_PROMPT + historical_context + current_date_info
 
     # 3) Try Gemini first, fallback to Groq
     logger.info(f"Chat via {target_role or 'generic'} engine")
