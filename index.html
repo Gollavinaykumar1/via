@@ -726,7 +726,15 @@ async function doBuild() {
   const btn = document.getElementById('buildBtn');
   const res = document.getElementById('buildResult');
   btn.disabled = true;
-  res.innerHTML = '<div style="color:var(--y);font-family:var(--fm);font-size:12px">🚀 Building... this may take 1-2 minutes...</div>';
+  res.innerHTML = '<div style="color:var(--y);font-family:var(--fm);font-size:13px;line-height:1.8">' +
+    '🚀 <strong>Build started!</strong> Your agents are working...<br>' +
+    '<span style="font-size:11px;color:var(--tx2)">⏳ This takes <strong>3–5 minutes</strong>. Please wait — do not refresh!</span><br><br>' +
+    '<span style="font-size:11px;color:var(--tx3)">Step 1 ✅ CEO planning the architecture...<br>' +
+    'Step 2 ✅ Backend agent designing APIs...<br>' +
+    'Step 3 ⏳ Frontend agent generating React code (slowest — ~90s)...<br>' +
+    'Step 4 ⏳ Pushing code to GitHub...<br>' +
+    'Step 5 ⏳ Deploying backend to Render...</span>' +
+    '</div>';
   try {
     const r = await fetch(API + '/deploy/', {
       method: 'POST', headers: authHeaders(),
