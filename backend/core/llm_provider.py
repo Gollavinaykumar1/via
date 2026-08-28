@@ -7,7 +7,7 @@ from .logger import logger
 
 USE_GROQ      = os.getenv("USE_GROQ", "false").lower() == "true"
 GROQ_API_KEY  = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL    = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL    = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 GROQ_MAX_TOK  = int(os.getenv("GROQ_MAX_TOKENS", "4000"))
 GROQ_TEMP     = float(os.getenv("GROQ_TEMPERATURE", "0.7"))
 GROQ_URL      = "https://api.groq.com/openai/v1/chat/completions"
@@ -165,10 +165,10 @@ class LLMProvider:
                 logger.warning(f"Gemini error attempt {attempt}: {e}")
                 if attempt <= max_attempts:
                     if "429" in str(e):
-                        logger.warning("Gemini Rate Limit (429) hit. Waiting 30 seconds...")
-                        time.sleep(30)
+                        logger.warning("Gemini Rate Limit (429) hit. Waiting 10 seconds...")
+                        time.sleep(10)
                     else:
-                        time.sleep(15)
+                        time.sleep(5)
         return ""
 
     def _generate_sync(self, prompt: str) -> str:
@@ -321,10 +321,10 @@ class LLMProvider:
                 logger.warning(f"Gemini chat error attempt {attempt}: {e}")
                 if attempt <= max_attempts:
                     if "429" in str(e):
-                        logger.warning("Gemini Rate Limit (429) hit. Waiting 30 seconds...")
-                        time.sleep(30)
+                        logger.warning("Gemini Rate Limit (429) hit. Waiting 10 seconds...")
+                        time.sleep(10)
                     else:
-                        time.sleep(15)
+                        time.sleep(5)
         return ""
 
     def _chat_sync(self, messages: list) -> str:
