@@ -30,6 +30,13 @@ if not _groq_keys:
     _groq_keys = [""]
 key_iterator = itertools.cycle(_groq_keys)
 
+_gemini_keys = [v for k, v in os.environ.items() if k.startswith("GEMINI_API_KEY") and v.strip()]
+if not _gemini_keys and GEMINI_API_KEY:
+    _gemini_keys = [GEMINI_API_KEY]
+if not _gemini_keys:
+    _gemini_keys = [""]
+gemini_key_iterator = itertools.cycle(_gemini_keys)
+
 
 class LLMProvider:
     def __init__(self):
@@ -142,6 +149,7 @@ class LLMProvider:
         attempt = 0
         max_attempts = 2  # Reduced to prevent frontend timeouts
         while attempt <= max_attempts:
+            current_gemini_key = next(gemini_key_iterator)
             try:
                 start = time.time()
                 r = requests.post(
@@ -358,12 +366,13 @@ class GeminiLLMProvider:
         attempt = 0
         max_attempts = 2
         while attempt <= max_attempts:
+            current_gemini_key = next(gemini_key_iterator)
             try:
                 start = time.time()
                 r = requests.post(
                     GEMINI_URL,
                     headers={
-                        "Authorization": f"Bearer {GEMINI_API_KEY}",
+                        "Authorization": f"Bearer {current_gemini_key}",
                         "Content-Type":  "application/json",
                     },
                     json={
@@ -391,12 +400,13 @@ class GeminiLLMProvider:
         attempt = 0
         max_attempts = 2
         while attempt <= max_attempts:
+            current_gemini_key = next(gemini_key_iterator)
             try:
                 start = time.time()
                 r = requests.post(
                     GEMINI_URL,
                     headers={
-                        "Authorization": f"Bearer {GEMINI_API_KEY}",
+                        "Authorization": f"Bearer {current_gemini_key}",
                         "Content-Type":  "application/json",
                     },
                     json={
